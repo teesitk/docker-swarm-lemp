@@ -1,0 +1,42 @@
+version: '3'
+services:
+  #db:
+  #  image: mariadb:10.1
+  #  deploy:
+  #    restart_policy:
+  #      condition: on-failure
+  #  volumes:
+  #    - /c/Users/Beci/docker-lemp/mysql/initdb/:/docker-entrypoint-initdb.d
+  #    - /c/Users/Beci/docker-lemp/mysql/data/:/var/lib/mysql
+  #  environment:
+  #    - MYSQL_ROOT_PASSWORD=1234
+  #    - MYSQL_DATABASE=lemp_db
+  #    - MYSQL_USER=root
+  #    - MYSQL_PASSWORD=1234
+  php:
+    container_name: lemp_php-fpm
+    image: php7fpm
+    deploy:
+      restart_policy:
+        condition: on-failure
+    volumes:
+      #- ./laravel/public/:/var/www/html
+      #- ./laravel/:/var/www
+      - /c/Users/Beci/docker-lemp/laravel:/var/www/html
+    expose:
+      - "9000"
+  nginx:
+    image: nginx:alpine
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - php
+    volumes:
+      #- /c/Users/Beci/docker-lemp/nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
+      - /c/Users/Beci/docker-lemp/nginx/conf.d:/etc/nginx/conf.d:ro
+      - /c/Users/Beci/docker-lemp/laravel:/var/www/html
+    #volumes_from:
+    #  - php
+    ports:
+      - 80:80
